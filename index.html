@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instituto Académico</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="container">
+        <aside class="sidebar" id="sidebar">
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <span>ISFD y T N°26</span>
+            </div>
+            <nav class="main-nav">
+                <!-- Los ítems de navegación se cargarán dinámicamente según el rol -->
+            </nav>
+            <div class="user-info">
+                <span id="loggedInUser"></span>
+                <button id="logoutBtn" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
+            </div>
+        </aside>
+
+        <main class="content-area">
+            <header class="top-header">
+                <button id="toggleSidebar" class="toggle-btn"><i class="fas fa-bars"></i></button>
+                <h1 id="pageTitle">Bienvenido</h1>
+                <div class="notifications">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge" id="notificationCount">0</span>
+                    <div class="notification-dropdown" id="notificationDropdown">
+                        <!-- Notificaciones aquí -->
+                    </div>
+                </div>
+            </header>
+
+            <section class="login-screen" id="loginScreen">
+                <div class="login-card">
+                    <div class="login-header">
+                        <i class="fas fa-graduation-cap"></i>
+                        <h2>INSTITUTO SUPERIOR DE FORMACIÓN DOCENTE Y TÉCNICA N° 26</h2>
+                        <p>Sistema de Gestión Académica</p>
+                    </div>
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label for="userType">
+                                <i class="fas fa-users"></i>
+                                Tipo de Usuario
+                            </label>
+                            <select id="userType" required class="form-control">
+                                <option value="">Selecciona tu rol</option>
+                                <option value="alumno">Alumno</option>
+                                <option value="profesor">Profesor</option>
+                                <option value="preceptor">Preceptor</option>
+                                <option value="admin">Administrador</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Ingresar
+                        </button>
+                        <p class="error-message" id="loginError"></p>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Las secciones de registro y recuperación de contraseña han sido eliminadas -->
+
+            <section class="dashboard-screen" id="dashboardScreen" style="display: none;">
+                <div class="dashboard-grid" id="dashboardContent">
+                    <!-- Contenido del dashboard por rol -->
+                </div>
+            </section>
+
+            <!-- Secciones específicas para cada funcionalidad -->
+            <section id="materiasAlumno" class="feature-section" style="display: none;">
+                <h2>Mis Materias</h2>
+                <div id="materiasList" class="card-grid"></div>
+            </section>
+
+            <section id="notasAlumno" class="feature-section" style="display: none;">
+                <h2>Mis Notas</h2>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Materia</th>
+                            <th>Nota</th>
+                            <th>Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody id="notasTableBody"></tbody>
+                </table>
+            </section>
+
+            <section id="asistenciaAlumno" class="feature-section" style="display: none;">
+                <h2>Mi Asistencia</h2>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Materia</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="asistenciaTableBody"></tbody>
+                </table>
+            </section>
+
+            <section id="calendario" class="feature-section" style="display: none;">
+                <h2>Calendario</h2>
+                <div id="calendarioEventos" class="calendario-container">
+                    <!-- El contenido del calendario se cargará dinámicamente -->
+                </div>
+            </section>
+
+            <!-- Secciones del Preceptor -->
+            <section id="asistenciaPreceptor" class="feature-section" style="display: none;">
+                <h2>Cargar Asistencia</h2>
+                <div class="form-group">
+                    <label for="cursoSelect">Seleccionar Curso:</label>
+                    <select id="cursoSelect" class="form-control">
+                        <!-- Las opciones se cargarán dinámicamente -->
+                    </select>
+                </div>
+                <div id="asistenciaForm" class="asistencia-grid">
+                    <!-- El formulario de asistencia se cargará dinámicamente -->
+                </div>
+            </section>
+
+            <section id="alumnosPreceptor" class="feature-section" style="display: none;">
+                <h2>Listado de Alumnos</h2>
+                <div class="form-group">
+                    <label for="cursoFilterPreceptor">Filtrar por Curso:</label>
+                    <select id="cursoFilterPreceptor" class="form-control">
+                        <!-- Las opciones se cargarán dinámicamente -->
+                    </select>
+                </div>
+                <div id="alumnosListPreceptor" class="alumnos-grid">
+                    <!-- La lista de alumnos se cargará dinámicamente -->
+                </div>
+            </section>
+
+            <section id="mensajesPreceptor" class="feature-section" style="display: none;">
+                <h2>Mensajes</h2>
+                <div class="mensajes-container">
+                    <div class="form-group">
+                        <label for="destinatarioSelect">Destinatario:</label>
+                        <select id="destinatarioSelect" class="form-control">
+                            <!-- Las opciones se cargarán dinámicamente -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="mensajeTexto">Mensaje:</label>
+                        <textarea id="mensajeTexto" class="form-control" rows="4"></textarea>
+                    </div>
+                    <button class="btn-primary" onclick="enviarMensaje()">Enviar Mensaje</button>
+                </div>
+            </section>
+
+            <!-- Secciones del Profesor -->
+            <section id="notasProfesor" class="feature-section" style="display: none;">
+                <h2>Cargar Notas</h2>
+                <div class="form-group">
+                    <label for="materiaSelect">Seleccionar Materia:</label>
+                    <select id="materiaSelect" class="form-control">
+                        <!-- Las opciones se cargarán dinámicamente -->
+                    </select>
+                </div>
+                <div id="notasForm" class="notas-grid">
+                    <!-- El formulario de notas se cargará dinámicamente -->
+                </div>
+            </section>
+
+            <section id="alumnosProfesor" class="feature-section" style="display: none;">
+                <h2>Mis Alumnos</h2>
+                <div class="form-group">
+                    <label for="materiaFilterProfesor">Filtrar por Materia:</label>
+                    <select id="materiaFilterProfesor" class="form-control">
+                        <!-- Las opciones se cargarán dinámicamente -->
+                    </select>
+                </div>
+                <div id="alumnosListProfesor" class="alumnos-grid">
+                    <!-- La lista de alumnos se cargará dinámicamente -->
+                </div>
+            </section>
+
+            <section id="eventosProfesor" class="feature-section" style="display: none;">
+                <h2>Eventos</h2>
+                <div class="eventos-container">
+                    <div class="form-group">
+                        <label for="eventoTitulo">Título del Evento:</label>
+                        <input type="text" id="eventoTitulo" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="eventoFecha">Fecha:</label>
+                        <input type="date" id="eventoFecha" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="eventoMateria">Materia:</label>
+                        <select id="eventoMateria" class="form-control">
+                            <!-- Las opciones se cargarán dinámicamente -->
+                        </select>
+                    </div>
+                    <button class="btn-primary" onclick="agregarEvento()">Agregar Evento</button>
+                </div>
+                <div id="listaEventos" class="eventos-grid">
+                    <!-- La lista de eventos se cargará dinámicamente -->
+                </div>
+            </section>
+            </section>
+
+            <section id="calendario" class="feature-section" style="display: none;">
+                <h2>Calendario Académico</h2>
+                <div class="calendar-grid" id="calendarGrid">
+                    <!-- Eventos del calendario aquí -->
+                </div>
+            </section>
+
+            <section id="novedades" class="feature-section" style="display: none;">
+                <h2>Novedades del Instituto</h2>
+                <div id="novedadesList" class="card-grid"></div>
+            </section>
+
+            <!-- Preceptor -->
+            <section id="cargarAsistenciaPreceptor" class="feature-section" style="display: none;">
+                <h2>Cargar Asistencia</h2>
+                <div class="form-group">
+                    <label for="selectCursoAsistencia">Seleccionar Curso:</label>
+                    <select id="selectCursoAsistencia"></select>
+                </div>
+                <div id="asistenciaFormContainer" style="display: none;">
+                    <h3>Asistencia para <span id="cursoAsistenciaTitulo"></span> - <span id="fechaAsistenciaTitulo"></span></h3>
+                    <form id="formCargarAsistencia">
+                        <div id="alumnosAsistenciaList"></div>
+                        <button type="submit" class="btn-primary">Guardar Asistencia</button>
+                    </form>
+                </div>
+            </section>
+
+            <section id="verAlumnosPreceptor" class="feature-section" style="display: none;">
+                <h2>Listado de Alumnos por Curso</h2>
+                <div class="form-group">
+                    <label for="selectCursoAlumnos">Seleccionar Curso:</label>
+                    <select id="selectCursoAlumnos"></select>
+                </div>
+                <div id="alumnosListContainer" class="card-grid" style="display: none;"></div>
+            </section>
+
+            <section id="enviarMensajesPreceptor" class="feature-section" style="display: none;">
+                <h2>Enviar Mensaje / Alerta</h2>
+                <form id="formEnviarMensaje">
+                    <div class="form-group">
+                        <label for="mensajeDestino">Destinatario:</label>
+                        <select id="mensajeDestino">
+                            <option value="todos">Todos los Alumnos</option>
+                            <!-- Opciones de cursos y alumnos se cargarán dinámicamente -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="mensajeAsunto">Asunto:</label>
+                        <input type="text" id="mensajeAsunto" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="mensajeContenido">Mensaje:</label>
+                        <textarea id="mensajeContenido" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary">Enviar Mensaje</button>
+                </form>
+            </section>
+
+            <section id="publicarNovedadPreceptor" class="feature-section" style="display: none;">
+                <h2>Publicar Novedad/Evento</h2>
+                <form id="formPublicarNovedad">
+                    <div class="form-group">
+                        <label for="novedadTitulo">Título:</label>
+                        <input type="text" id="novedadTitulo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="novedadContenido">Contenido:</label>
+                        <textarea id="novedadContenido" rows="5" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="novedadFecha">Fecha (para eventos):</label>
+                        <input type="date" id="novedadFecha">
+                    </div>
+                    <button type="submit" class="btn-primary">Publicar</button>
+                </form>
+            </section>
+
+            <section id="generarReportesPreceptor" class="feature-section" style="display: none;">
+                <h2>Generar Reportes</h2>
+                <p>Aquí se podría integrar la lógica para generar reportes. Por ejemplo, un botón para descargar un CSV de asistencia.</p>
+                <button class="btn-secondary" onclick="alert('Funcionalidad de reporte en desarrollo')"><i class="fas fa-file-csv"></i> Reporte de Asistencia Mensual</button>
+            </section>
+
+            <!-- Profesor -->
+            <section id="cargarNotasProfesor" class="feature-section" style="display: none;">
+                <h2>Cargar Notas</h2>
+                <div class="form-group">
+                    <label for="selectMateriaCargarNotas">Seleccionar Materia:</label>
+                    <select id="selectMateriaCargarNotas"></select>
+                </div>
+                <div id="cargarNotasFormContainer" style="display: none;">
+                    <h3>Cargar Notas para <span id="materiaNotasTitulo"></span></h3>
+                    <form id="formCargarNotas">
+                        <div class="form-group">
+                            <label for="selectAlumnoNotas">Seleccionar Alumno:</label>
+                            <select id="selectAlumnoNotas"></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="notaValor">Nota:</label>
+                            <input type="number" id="notaValor" min="1" max="10" step="0.5" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="notaFecha">Fecha:</label>
+                            <input type="date" id="notaFecha" required>
+                        </div>
+                        <button type="submit" class="btn-primary">Guardar Nota</button>
+                    </form>
+                </div>
+            </section>
+
+            <section id="verAlumnosProfesor" class="feature-section" style="display: none;">
+                <h2>Listado de Alumnos por Materia</h2>
+                <div class="form-group">
+                    <label for="selectMateriaAlumnos">Seleccionar Materia:</label>
+                    <select id="selectMateriaAlumnos"></select>
+                </div>
+                <div id="alumnosMateriaListContainer" class="card-grid" style="display: none;"></div>
+            </section>
+
+            <section id="publicarExamenProfesor" class="feature-section" style="display: none;">
+                <h2>Publicar Fecha de Examen / TP</h2>
+                <form id="formPublicarExamen">
+                    <div class="form-group">
+                        <label for="examenMateria">Materia:</label>
+                        <select id="examenMateria"></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="examenTipo">Tipo:</label>
+                        <select id="examenTipo">
+                            <option value="Examen">Examen</option>
+                            <option value="Trabajo Práctico">Trabajo Práctico</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="examenDescripcion">Descripción:</label>
+                        <input type="text" id="examenDescripcion" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="examenFecha">Fecha:</label>
+                        <input type="date" id="examenFecha" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Publicar Evento</button>
+                </form>
+            </section>
+
+            <section id="enviarMensajesProfesor" class="feature-section" style="display: none;">
+                <h2>Enviar Mensaje / Alerta a Alumnos</h2>
+                <form id="formEnviarMensajeProfesor">
+                    <div class="form-group">
+                        <label for="mensajeProfesorMateria">Materia:</label>
+                        <select id="mensajeProfesorMateria"></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="mensajeProfesorAsunto">Asunto:</label>
+                        <input type="text" id="mensajeProfesorAsunto" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="mensajeProfesorContenido">Mensaje:</label>
+                        <textarea id="mensajeProfesorContenido" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary">Enviar Mensaje</button>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
